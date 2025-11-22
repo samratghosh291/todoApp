@@ -1,16 +1,143 @@
-# React + Vite
+# Todo App 📝
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, responsive **Todo App** built with **React** and **Vite**, featuring **dark mode**, **categories**, **search functionality**, and **localStorage persistence**. Designed to help you **organize tasks efficiently**.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## **Table of Contents**
 
-## React Compiler
+* [Features](#features)
+* [Demo](#demo)
+* [Technologies](#technologies)
+* [Installation](#installation)
+* [Usage](#usage)
+* [Folder Structure](#folder-structure)
+* [Deployment](#deployment)
+* [Contributing](#contributing)
+* [License](#license)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## **Features**
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+* ✅ Add, edit, and delete tasks
+* ✅ **Categories** with colorful labels
+* ✅ **Search tasks** by title
+* ✅ **Dark mode** toggle
+* ✅ **Persist tasks** using `localStorage`
+* ✅ Responsive layout for mobile and desktop
+* ✅ Separate **Active** and **Completed** task lists
+* ✅ Hover and active effects on buttons
+
+---
+
+## **Demo**
+
+Live demo: [Add your Netlify/GitHub Pages link here]
+
+## **Technologies**
+
+* **React** - Frontend library
+* **Vite** - Fast React bundler
+* **Tailwind CSS** - Utility-first CSS framework
+* **Lucide Icons** - SVG icons for UI
+* **LocalStorage** - Browser persistence
+
+---
+
+## **Installation**
+
+1. **Clone the repository**
+
+```bash
+git clone https://github.com/<your-username>/todoApp.git
+cd todoApp
+```
+
+2. **Install dependencies**
+
+```bash
+npm install
+```
+
+3. **Run the development server**
+
+```bash
+npm run dev
+```
+
+4. Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+---
+
+## **Usage**
+
+1. Click **Add Task** to create a new task
+2. Enter **Title**, **Description**, and select a **Category**
+3. Use the **search bar** to filter tasks
+4. Toggle **dark mode** using the switch in the header
+5. Mark tasks as completed or delete them
+6. Your tasks are automatically saved in **localStorage**
+
+---
+
+## **Folder Structure**
+
+```
+todoApp/
+│
+├─ public/                 # Public assets (favicon, images)
+├─ src/
+│  ├─ components/          # Reusable components
+│  │  ├─ Header.jsx
+│  │  ├─ AddTaskButton.jsx
+│  │  ├─ TaskForm.jsx
+│  │  ├─ SearchBar.jsx
+│  │  ├─ TaskList.jsx
+│  │  └─ CompletedList.jsx
+│  ├─ App.jsx              # Main application
+│  ├─ main.jsx             # Entry point
+│  └─ index.css            # Tailwind imports
+├─ package.json
+├─ tailwind.config.js
+└─ vite.config.js
+```
+
+---
+
+## **Deployment**
+
+You can deploy this project using **Netlify**:
+
+1. Push your code to **GitHub**
+2. Go to [Netlify](https://www.netlify.com/) → **New site → Import from Git**
+3. Connect your GitHub repository
+4. Build settings:
+
+   * **Build command:** `npm run build`
+   * **Publish directory:** `dist`
+5. Deploy the site and share the link
+
+---
+
+## **Contributing**
+
+Contributions are welcome!
+
+1. Fork the repository
+2. Create your branch: `git checkout -b feature/feature-name`
+3. Commit your changes: `git commit -m "Add feature"`
+4. Push to branch: `git push origin feature/feature-name`
+5. Open a Pull Request
+
+---
+
+## **License**
+
+This project is **MIT licensed**.
+
+---
+
+I can also **add badges at the top** for license, build, and Netlify status, which makes it look more professional on GitHub.
+
+Do you want me to do that next?
