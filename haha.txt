@@ -1,0 +1,322 @@
+import React, { useState } from 'react';
+import { ChevronDown, ChevronRight, Plus, Trash2, Check, Share2 } from 'lucide-react';
+
+export default function App() {
+  const [todos, setTodos] = useState([
+    {
+      id: 1,
+      header: 'Project Planning',
+      body: 'Define project scope, timeline, and key deliverables. Schedule kickoff meeting with stakeholders.',
+      completed: false,
+      expanded: false,
+      completedAt: null
+    },
+    {
+      id: 2,
+      header: 'Client Presentation',
+      body: 'Prepare quarterly review slides highlighting achievements, metrics, and upcoming roadmap items.',
+      completed: false,
+      expanded: false,
+      completedAt: null
+    }
+  ]);
+  const [newHeader, setNewHeader] = useState('');
+  const [newBody, setNewBody] = useState('');
+  const [showForm, setShowForm] = useState(false);
+  const [showShareMenu, setShowShareMenu] = useState(false);
+
+  const addTodo = () => {
+    if (newHeader.trim()) {
+      setTodos([
+        ...todos,
+        {
+          id: Date.now(),
+          header: newHeader,
+          body: newBody,
+          completed: false,
+          expanded: false,
+          completedAt: null
+        }
+      ]);
+      setNewHeader('');
+      setNewBody('');
+      setShowForm(false);
+    }
+  };
+
+  const toggleExpanded = (id) => {
+    setTodos(todos.map(todo =>
+      todo.id === id ? { ...todo, expanded: !todo.expanded } : todo
+    ));
+  };
+
+  const toggleCompleted = (id) => {
+    setTodos(todos.map(todo =>
+      todo.id === id ? { 
+        ...todo, 
+        completed: !todo.completed,
+        completedAt: !todo.completed ? new Date().toLocaleString() : null
+      } : todo
+    ));
+  };
+
+  const deleteTodo = (id) => {
+    setTodos(todos.filter(todo => todo.id !== id));
+  };
+
+  const activeTodos = todos.filter(t => !t.completed);
+  const completedTodos = todos.filter(t => t.completed);
+
+  const generateShareText = () => {
+    let text = '📋 My Task List\n\n';
+    text += `✅ Completed: ${completedTodos.length}\n`;
+    text += `⏳ Active: ${activeTodos.length}\n\n`;
+    
+    if (activeTodos.length > 0) {
+      text += 'Active Tasks:\n';
+      activeTodos.forEach((todo, i) => {
+        text += `${i + 1}. ${todo.header}\n`;
+      });
+    }
+    
+    return encodeURIComponent(text);
+  };
+
+  const shareToWhatsApp = () => {
+    window.open(`https://wa.me/?text=${generateShareText()}`, '_blank');
+  };
+
+  const shareToX = () => {
+    window.open(`https://twitter.com/intent/tweet?text=${generateShareText()}`, '_blank');
+  };
+
+  const shareToReddit = () => {
+    window.open(`https://reddit.com/submit?title=My%20Task%20List&text=${generateShareText()}`, '_blank');
+  };
+
+  const copyLink = () => {
+    const text = decodeURIComponent(generateShareText());
+    navigator.clipboard.writeText(text);
+    alert('Task list copied to clipboard!');
+    setShowShareMenu(false);
+  };
+
+  return (
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-blue-50 to-indigo-50 py-12 px-4">
+      <div className="max-w-4xl mx-auto">
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h1 className="text-4xl font-light text-slate-800 mb-2">Task Manager</h1>
+            <p className="text-slate-500 font-light">Organize and track your priorities</p>
+          </div>
+          <div className="relative">
+            <button
+              onClick={() => setShowShareMenu(!showShareMenu)}
+              className="flex items-center gap-2 px-5 py-2.5 bg-white text-slate-700 rounded-xl border border-slate-200 hover:bg-slate-50 hover:border-slate-300 hover:shadow-md active:scale-95 transition-all duration-200 font-medium"
+            >
+              <Share2 size={18} />
+              Share
+            </button>
+            {showShareMenu && (
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-slate-200 py-2 z-10">
+                <button
+                  onClick={shareToWhatsApp}
+                  className="w-full px-4 py-2.5 text-left text-slate-700 hover:bg-green-50 hover:text-green-600 transition-colors duration-150 flex items-center gap-3"
+                >
+                  <span className="text-lg">💬</span>
+                  WhatsApp
+                </button>
+                <button
+                  onClick={shareToX}
+                  className="w-full px-4 py-2.5 text-left text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-150 flex items-center gap-3"
+                >
+                  <span className="text-lg">𝕏</span>
+                  X (Twitter)
+                </button>
+                <button
+                  onClick={shareToReddit}
+                  className="w-full px-4 py-2.5 text-left text-slate-700 hover:bg-orange-50 hover:text-orange-600 transition-colors duration-150 flex items-center gap-3"
+                >
+                  <span className="text-lg">🔴</span>
+                  Reddit
+                </button>
+                <div className="border-t border-slate-100 my-1"></div>
+                <button
+                  onClick={copyLink}
+                  className="w-full px-4 py-2.5 text-left text-slate-700 hover:bg-slate-50 transition-colors duration-150 flex items-center gap-3"
+                >
+                  <span className="text-lg">📋</span>
+                  Copy Text
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mb-6">
+          <div className="p-6 border-b border-slate-100">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-linear-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center shadow-md">
+                  <span className="text-white font-semibold text-lg">{activeTodos.length}</span>
+                </div>
+                <div>
+                  <h2 className="text-xl font-medium text-slate-800">Active Tasks</h2>
+                  <p className="text-sm text-slate-500">{completedTodos.length} completed</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowForm(!showForm)}
+                className="flex items-center gap-2 px-5 py-2.5 bg-linear-to-r from-blue-500 to-indigo-600 text-white rounded-xl hover:shadow-lg hover:from-blue-600 hover:to-indigo-700 active:scale-95 transition-all duration-200 font-medium"
+              >
+                <Plus size={18} />
+                Add Task
+              </button>
+            </div>
+          </div>
+
+          {showForm && (
+            <div className="p-6 bg-slate-50 border-b border-slate-200">
+              <input
+                type="text"
+                placeholder="Task title"
+                value={newHeader}
+                onChange={(e) => setNewHeader(e.target.value)}
+                className="w-full px-4 py-3 mb-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-slate-800 placeholder-slate-400"
+              />
+              <textarea
+                placeholder="Task description (optional)"
+                value={newBody}
+                onChange={(e) => setNewBody(e.target.value)}
+                className="w-full px-4 py-3 mb-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-slate-800 placeholder-slate-400 resize-none"
+                rows="3"
+              />
+              <div className="flex gap-2">
+                <button
+                  onClick={addTodo}
+                  className="px-6 py-2.5 bg-linear-to-r from-blue-500 to-indigo-600 text-white rounded-xl hover:shadow-lg hover:from-blue-600 hover:to-indigo-700 active:scale-95 transition-all duration-200 font-medium"
+                >
+                  Create Task
+                </button>
+                <button
+                  onClick={() => setShowForm(false)}
+                  className="px-6 py-2.5 bg-white text-slate-600 rounded-xl border border-slate-200 hover:bg-slate-50 hover:border-slate-300 hover:shadow-md active:scale-95 transition-all duration-200 font-medium"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
+
+          <div className="divide-y divide-slate-100">
+            {activeTodos.map((todo) => (
+              <div key={todo.id} className="p-6 hover:bg-slate-50 transition-colors duration-150">
+                <div className="flex items-start gap-4">
+                  <button
+                    onClick={() => toggleCompleted(todo.id)}
+                    className="mt-1 w-5 h-5 rounded-md border-2 border-slate-300 hover:border-blue-500 hover:bg-blue-50 active:scale-90 transition-all duration-200 flex items-center justify-center shrink-0"
+                  >
+                    {todo.completed && <Check size={14} className="text-blue-500" />}
+                  </button>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between mb-2">
+                      <button
+                        onClick={() => toggleExpanded(todo.id)}
+                        className="flex items-center gap-2 text-left flex-1 group"
+                      >
+                        {todo.expanded ? (
+                          <ChevronDown size={18} className="text-slate-400 shrink-0" />
+                        ) : (
+                          <ChevronRight size={18} className="text-slate-400 shrink-0" />
+                        )}
+                        <h3 className="text-lg font-medium text-slate-800 group-hover:text-blue-600 transition-colors">
+                          {todo.header}
+                        </h3>
+                      </button>
+                      <button
+                        onClick={() => deleteTodo(todo.id)}
+                        className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 active:scale-90 rounded-lg transition-all duration-200"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                    {todo.expanded && todo.body && (
+                      <div className="ml-6 mt-3 text-slate-600 leading-relaxed bg-slate-50 p-4 rounded-xl border border-slate-100">
+                        {todo.body}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+            {activeTodos.length === 0 && (
+              <div className="p-12 text-center">
+                <div className="w-16 h-16 bg-slate-100 rounded-full mx-auto mb-4 flex items-center justify-center">
+                  <Check size={24} className="text-slate-400" />
+                </div>
+                <p className="text-slate-500 font-light">No active tasks. You're all caught up!</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {completedTodos.length > 0 && (
+          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div className="p-6 border-b border-slate-100">
+              <h2 className="text-xl font-medium text-slate-800">Completed Tasks</h2>
+            </div>
+            <div className="divide-y divide-slate-100">
+              {completedTodos.map((todo) => (
+                <div key={todo.id} className="p-6 hover:bg-slate-50 transition-colors duration-150 opacity-60">
+                  <div className="flex items-start gap-4">
+                    <button
+                      onClick={() => toggleCompleted(todo.id)}
+                      className="mt-1 w-5 h-5 rounded-md border-2 border-blue-500 bg-blue-500 hover:bg-blue-600 hover:border-blue-600 active:scale-90 transition-all duration-200 flex items-center justify-center shrink-0"
+                    >
+                      <Check size={14} className="text-white" />
+                    </button>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between mb-2">
+                        <button
+                          onClick={() => toggleExpanded(todo.id)}
+                          className="flex items-center gap-2 text-left flex-1 group"
+                        >
+                          {todo.expanded ? (
+                            <ChevronDown size={18} className="text-slate-400 shrink-0" />
+                          ) : (
+                            <ChevronRight size={18} className="text-slate-400 shrink-0" />
+                          )}
+                          <div className="flex-1">
+                            <h3 className="text-lg font-medium text-slate-800 line-through">
+                              {todo.header}
+                            </h3>
+                            {todo.completedAt && (
+                              <p className="text-xs text-slate-500 mt-1">
+                                Completed: {todo.completedAt}
+                              </p>
+                            )}
+                          </div>
+                        </button>
+                        <button
+                          onClick={() => deleteTodo(todo.id)}
+                          className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 active:scale-90 rounded-lg transition-all duration-200"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                      {todo.expanded && todo.body && (
+                        <div className="ml-6 mt-3 text-slate-600 leading-relaxed bg-slate-50 p-4 rounded-xl border border-slate-100 line-through">
+                          {todo.body}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
